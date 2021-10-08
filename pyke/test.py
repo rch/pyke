@@ -196,11 +196,11 @@ def init(*args, **kws):
 
 def eval_plan(globals, locals):
     while True:
-        print
-        expr = raw_input("run plan: ").strip()
+        print()
+        expr = input("run plan: ").strip()
         if not expr: break
         ans = eval(expr, globals.copy(), locals.copy())
-        print "plan returned:", ans
+        print("plan returned:", ans)
 
 def run(rule_bases_to_activate,
         default_rb = None, init_fn = None, fn_to_run_plan = eval_plan,
@@ -213,8 +213,8 @@ def run(rule_bases_to_activate,
     if default_rb is None: default_rb = rule_bases_to_activate[0]
 
     while True:
-        print
-        goal_str = raw_input("goal: ")
+        print()
+        goal_str = input("goal: ")
         if not goal_str: break
         goal, args_str = parse(goal_str)
         if goal == "trace":
@@ -237,7 +237,7 @@ def run(rule_bases_to_activate,
             rb_name = goal
             goal, args_str = parse(args_str[1:])
         args = parse(args_str)[0]
-        print "proving: %s.%s%s" % (rb_name, goal, args)
+        print("proving: %s.%s%s".format(rb_name, goal, args))
         goal_args = tuple(as_pattern(arg) for arg in args)
         Engine.reset()
         if init_fn: init_fn(Engine)
@@ -247,11 +247,12 @@ def run(rule_bases_to_activate,
             with Engine.prove(rb_name, goal, context, goal_args) as it:
                 for prototype_plan in it:
                     final = {}
-                    print "got: %s%s" % \
-                          (goal, tuple(arg.as_data(context, True, final)
-                                       for arg in goal_args))
+                    print("got: %s%s".format(
+                        goal,
+                        tuple(arg.as_data(context, True, final)
+                                for arg in goal_args)))
                     if not prototype_plan:
-                        print "no plan returned"
+                        print("no plan returned")
                     else:
                         plan = prototype_plan.create_plan(final)
                         fn_to_run_plan(plan_globals, locals())

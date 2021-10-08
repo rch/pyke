@@ -94,7 +94,7 @@ def cprint2(obj, maxdepth):
         return printStr(obj)
     try:
         return str(obj)
-    except StandardError, e:
+    except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         import traceback
         if isinstance(obj, types.InstanceType): obj_type = obj.__class__

@@ -83,17 +83,17 @@ def get_answer(question, match_prompt, conv_fn=None, test=None, review=None):
     if match_prompt and not match_prompt[-1].isspace(): question += ' '
     if encoding: question = question.encode(encoding)
     while True:
-        print "_" * 78
-        ans = raw_input(question)
+        print("_" * 78)
+        ans = input(question)
         try:
             if encoding and sys.version_info[0] < 3: ans = ans.decode(encoding)
             if conv_fn: ans = conv_fn(ans)
             if test: ans = qa_helpers.match(ans, test)
             break
-        except ValueError, e:
-            print "answer should be %s, got %s" % (str(e), repr(ans))
-            print
-            print "Try Again:"
+        except ValueError as e:
+            print("answer should be %s, got %s".format((str(e), repr(ans))))
+            print()
+            print("Try Again:")
     if review:
         def matches2(ans, test):
             try:
@@ -110,7 +110,7 @@ def get_answer(question, match_prompt, conv_fn=None, test=None, review=None):
 
         for review_test, review_str in review:
             if matches(ans, review_test):
-                print review_str
+                print(review_str)
     return ans
 
 def ask_yn(question, review=None):

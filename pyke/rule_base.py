@@ -44,14 +44,18 @@ class stopIterator(object):
 
     def __iter__(self): return self
 
-    def next(self):
+    def __next__(self):
         if self.iterator:
             try:
-                return self.iterator.next()
+                return next(self.iterator)
             except StopProof:
                 self.iterator = None
                 self.rule_base.num_bc_rule_failures += 1
         raise StopIteration
+    
+    def next(self):
+        return self.__next__(self)
+
 
 class chain_context(object):
     def __init__(self, outer_it):
@@ -75,14 +79,17 @@ class outer_iterable(object):
         elif hasattr(self.inner_it, 'close'): self.inner_it.close()
         if hasattr(self.outer_it, 'close'): self.outer_it.close()
 
-    def next(self):
-        ans = self.outer_it.next()
+    def __next__(self):
+        ans = next(self.outer_it)
         if hasattr(ans, '__enter__'):
             self.inner_it = ans
             return ans.__enter__()
         ans = iter(ans)
         self.inner_it = ans
         return ans
+    
+    def next(self):
+        return self.__next__()
 
 class rule_base(knowledge_base.knowledge_base):
     def __init__(self, engine, name, parent = None, exclude_list = ()):

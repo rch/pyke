@@ -13,7 +13,7 @@ def file(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -137,7 +137,7 @@ def rule_decl(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -161,7 +161,7 @@ def rule_decl_with_parent(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -187,7 +187,7 @@ def fc_rules(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -248,7 +248,7 @@ def fc_rule_(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -337,7 +337,7 @@ def fc_premises0(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -355,7 +355,7 @@ def fc_premises1(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -423,7 +423,7 @@ def fc_premise(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -485,7 +485,7 @@ def gen_fc_for_false(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -524,7 +524,7 @@ def gen_fc_for_true(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -558,7 +558,7 @@ def fc_first(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -616,7 +616,7 @@ def fc_forall_None(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -662,7 +662,7 @@ def fc_forall_require(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -756,7 +756,7 @@ def fc_notany(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -819,7 +819,7 @@ def fc_python_premise(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -855,7 +855,7 @@ def assertions_0(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -873,7 +873,7 @@ def assertions_n(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -917,7 +917,7 @@ def assertion(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -957,7 +957,7 @@ def python_assertion(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -975,7 +975,7 @@ def bc_rules(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1046,7 +1046,7 @@ def bc_rule_(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1111,7 +1111,7 @@ def bc_premises(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1178,7 +1178,7 @@ def bc_premises1_0(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1196,7 +1196,7 @@ def bc_premises1_n(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1278,7 +1278,7 @@ def bc_premise(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1392,7 +1392,7 @@ def bc_first(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1468,7 +1468,7 @@ def bc_forall_None(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1515,7 +1515,7 @@ def bc_forall_require(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1605,7 +1605,7 @@ def bc_notany(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1669,7 +1669,7 @@ def no_plan(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1700,7 +1700,7 @@ def as_plan(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1742,7 +1742,7 @@ def plan_spec(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1784,7 +1784,7 @@ def illegal_plan_spec(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1809,7 +1809,7 @@ def plan_bindings(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1859,7 +1859,7 @@ def not_required(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1877,7 +1877,7 @@ def required(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1916,7 +1916,7 @@ def bc_python_premise(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -1952,7 +1952,7 @@ def python_eq(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -2007,7 +2007,7 @@ def python_in(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -2071,7 +2071,7 @@ def python_check(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,
@@ -2108,7 +2108,7 @@ def python_block(rule, arg_patterns, arg_context):
   if len(arg_patterns) == len(patterns):
     context = contexts.bc_context(rule)
     try:
-      if all(itertools.imap(lambda pat, arg:
+      if all(map(lambda pat, arg:
                               pat.match_pattern(context, context,
                                                 arg, arg_context),
                             patterns,

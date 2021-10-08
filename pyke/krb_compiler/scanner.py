@@ -133,17 +133,18 @@ def t_indent_sp(t):
     indent = count_indent(t.value[1:])[0]
     current_indent = indent_levels[-1] if indent_levels else 0
     if debug:
-        print "t_indent_sp: t.value", repr(t.value), "indent", indent, \
+        # todo(rch)
+        print("t_indent_sp: t.value", repr(t.value), "indent", indent, \
               "current_indent", current_indent, \
               "indent_levels", indent_levels, \
               "t.lexpos", t.lexpos, \
               "t.lexer.lexpos", t.lexer.lexpos, \
-              "t.lexer.lexdata[]", repr(t.lexer.lexdata[t.lexpos])
+              "t.lexer.lexdata[]", repr(t.lexer.lexdata[t.lexpos]))
     if indent > current_indent:
         t.type = 'INDENT_TOK'
         indent_levels.append(indent)
         t.lexer.begin('INITIAL')
-        if debug: print "INDENT_TOK: indent_levels", indent_levels
+        if debug: print("INDENT_TOK: indent_levels", indent_levels)
         return t
     if indent < current_indent:
         if indent > 0 and indent not in indent_levels:
@@ -153,16 +154,16 @@ def t_indent_sp(t):
         t.type = 'DEINDENT_TOK'
         del indent_levels[-1]
         if indent < (indent_levels[-1] if indent_levels else 0):
-            if debug: print " -- pushing indent back"
+            if debug: print(" -- pushing indent back")
             t.lexer.skip(-len(t.value))
         else:
-            if debug: print " -- doing begin('INITIAL')"
+            if debug: print(" -- doing begin('INITIAL')")
             t.lexer.begin('INITIAL')
-        if debug: print "DEINDENT_TOK: indent_levels", indent_levels
+        if debug: print("DEINDENT_TOK: indent_levels", indent_levels)
         return t
     # else indent == current_indent
     t.lexer.begin('INITIAL')
-    if debug: print "no indent: indent_levels", indent_levels
+    if debug: print("no indent: indent_levels", indent_levels)
 
 t_checknl_ignore = ' \t'
 
@@ -216,13 +217,13 @@ def t_code_string(t):
     global current_line
     current_line += t.value
     mark(t)
-    if debug: print "scanner saw string:", t.value
+    if debug: print("scanner saw string:", t.value)
     t.lexer.lineno += t.value.count('\n')
 
 def t_code_comment(t):
     r'[ \t\f\r]*\#.*'
     global current_line
-    if debug: print "scanner saw comment:", t.value
+    if debug: print("scanner saw comment:", t.value)
     #current_line += t.value
 
 def t_code_plan(t):
@@ -230,7 +231,7 @@ def t_code_plan(t):
     global current_line
     mark(t)
     if debug:
-        print "scanner saw '$$', current_plan_name is", current_plan_name
+        print("scanner saw '$$', current_plan_name is", current_plan_name)
     if not current_plan_name:
         raise SyntaxError("'$$' only allowed in plan_specs within the "
                           "'when' clause",
@@ -247,7 +248,7 @@ def t_code_pattern_var(t):
                           syntaxerror_params(t.lexpos))
     current_line += pattern_var_format % t.value[1:]
     plan_vars_needed.append(t.value[1:])
-    if debug: print "scanner saw pattern_var:", t.value
+    if debug: print("scanner saw pattern_var:", t.value)
 
 def t_code_continuation(t):
     r'\\(\r)?\n'
@@ -256,7 +257,7 @@ def t_code_continuation(t):
     current_line += '\\'
     code.append(current_line)
     current_line = ''
-    if debug: print "scanner saw continuation:", t.value
+    if debug: print("scanner saw continuation:", t.value)
 
 def t_code_open(t):
     r'[{([]'
@@ -280,20 +281,20 @@ def t_code_symbol(t):
     global current_line
     mark(t)
     current_line += t.value
-    if debug: print "scanner saw symbol:", t.value
+    if debug: print("scanner saw symbol:", t.value)
 
 def t_code_space(t):
     r'''[ \t]+'''
     global current_line
     current_line += t.value
-    if debug: print "scanner saw space chars:", t.value
+    if debug: print("scanner saw space chars:", t.value)
 
 def t_code_other(t):
     r'''[^][(){}$\\'"\r\n0-9a-zA-Z_ \t]+'''
     global current_line
     mark(t)
     current_line += t.value
-    if debug: print "scanner saw other chars:", t.value
+    if debug: print("scanner saw other chars:", t.value)
 
 def t_code_NL_TOK(t):
     r'(\r)?\n([ \t]*(\#.*)?(\r)?\n)*[ \t]*'
@@ -302,12 +303,12 @@ def t_code_NL_TOK(t):
         code.append(current_line)
         current_line = ''
     indent = count_indent(t.value[t.value.rindex('\n') + 1:])[0]
-    if debug: print "scanner saw nl:", t.value, "new indent is", indent
+    if debug: print("scanner saw nl:", t.value, "new indent is", indent)
     if indent < code_indent_level and code_nesting_level == 0:
         t.lexer.skip(-len(t.value))
         t.type = 'CODE_TOK'
         t.value = tuple(code), tuple(plan_vars_needed), code_lineno, code_lexpos
-        if debug: print "scanner begin('INITIAL')"
+        if debug: print("scanner begin('INITIAL')")
         t.lexer.begin('INITIAL')
         return t
     t.lexer.lineno += t.value.count('\n')
@@ -567,7 +568,7 @@ def tokenize(s):
         LexToken(IDENTIFIER_TOK,'name2',4,39)
     '''
     for t in token_iterator(s):
-        print t
+        print(t)
 
 def tokenize_file(filename = 'TEST/scan_test'):
     r""" Used for testing.
@@ -638,7 +639,7 @@ def syntaxerror_params(pos = None, lineno = None):
                        lexer.lexdata[end] in '\r\n'):
         end -= 1
     start = end
-    if debug: print "pos", pos, "lineno", lineno, "end", end
+    if debug: print("pos", pos, "lineno", lineno, "end", end)
     start = max(lexer.lexdata.rfind('\r', 0, end),
                 lexer.lexdata.rfind('\n', 0, end)) + 1
     column = pos - start + 1
@@ -652,7 +653,7 @@ def syntaxerror_params(pos = None, lineno = None):
     if goal_mode and start == 0 and lexer.lexdata.startswith('check ', start):
         start += 6
         column -= 6
-    if debug: print "start", start, "column", column, "end", end
+    if debug: print("start", start, "column", column, "end", end)
     return (lexer.filename, lineno, column, lexer.lexdata[start:end])
 
 lexer = None

@@ -28,10 +28,13 @@
 
 from __future__ import with_statement
 import os, os.path
+import io
 import time
 import sys
 import re
 import pyke
+from importlib import reload
+
 
 debug = False
 
@@ -228,7 +231,7 @@ class target_pkg(object):
             for deleted_filepath \
              in [src_filepath
                  for src_pkg_name, src_path_from_pkg, src_filepath
-                  in self.sources.iterkeys()
+                  in self.sources.keys()
                      if src_pkg_name == source_package_name and
                         src_path_from_pkg == path_from_package and
                         src_filepath not in sources]:
@@ -270,7 +273,7 @@ class target_pkg(object):
             initialized = False
             for (source_package_name, path_from_package, source_filename), \
                 value \
-             in self.sources.iteritems():
+             in self.sources.items():
                 if not value and \
                    (source_package_name, path_from_package) in \
                      self.source_packages:
@@ -338,7 +341,7 @@ class target_pkg(object):
                 f.write("def get_target_pkg():\n")
                 f.write("    return target_pkg.target_pkg(__name__, __file__, "
                         "pyke_version, loader, {\n")
-                for key, value in self.sources.iteritems():
+                for key, value in self.sources.items():
                     if debug: print >> sys.stderr, "write got:", key, value
                     if (key[0], key[1]) in self.source_packages:
                         if debug: print >> sys.stderr, "writing:", key, value
@@ -357,7 +360,7 @@ class target_pkg(object):
                       'load_fb': load_fb, 'load_qb': load_qb}
         if debug: print >> sys.stderr, "target_pkg.load:", load_flags
         for (source_package_name, path_from_package, source_filename), value \
-         in self.sources.iteritems():
+         in self.sources.items():
             if not self.check_sources or self.loader or \
                (source_package_name, path_from_package) in self.source_packages:
                 for target_filename in value[1:]:
@@ -414,18 +417,14 @@ class target_pkg(object):
 
     def load_pickle(self, filename, engine):
         global pickle
-        if debug: print >> sys.stderr, "load_pickle:", filename
-        try:
-            pickle
-        except NameError:
-            import cPickle as pickle
+        import pickle
+        if debug: print("load_pickle:", filename)
         full_path = os.path.join(self.directory, filename)
         if self.loader:
             import contextlib
-            import StringIO
             ctx_lib = \
                 contextlib.closing(
-                    StringIO.StringIO(self.loader.get_data(full_path)))
+                    io.BytesIO(self.loader.get_data(full_path)))
         else:
             ctx_lib = open(full_path, 'rb')
         with ctx_lib as f:
@@ -442,11 +441,14 @@ class target_pkg(object):
 
     def pickle_it(self, obj, path):
         global pickle
+        import pickle
         try:
             pickle
         except NameError:
-            import cPickle as pickle
-            import copy_reg
+            try:
+                import copy_reg
+            except:
+                import copyreg as copy_reg
             copy_reg.pickle(slice, lambda s: (slice, (s.start, s.stop, s.step)))
         sys.stderr.write("writing [%s]/%s\n" %
                            (self.package_name, os.path.basename(path)))

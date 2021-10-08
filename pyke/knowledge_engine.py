@@ -27,6 +27,9 @@ import types
 import os, os.path
 import re
 import contextlib
+from importlib import reload
+from six import string_types
+
 
 if sys.version_info[0] < 3:
     import itertools
@@ -50,7 +53,7 @@ Sys_path = tuple(os.getcwd() if p == ''
                              else os.path.normpath(os.path.abspath(p))
                  for p in sys.path)
 
-class CanNotProve(StandardError):
+class CanNotProve(Exception):
     pass
 
 class engine(object):
@@ -82,7 +85,7 @@ class engine(object):
         from pyke import (condensedPrint, pattern, fact_base, goal, rule_base,
                           special, target_pkg)
 
-        for keyword in kws.iterkeys():
+        for keyword in kws.keys():
             if keyword not in ('load_fc', 'load_bc', 'load_fb', 'load_qb'):
                 raise TypeError("engine.__init__() got an unexpected keyword "
                                 "argument %r" %
@@ -101,19 +104,20 @@ class engine(object):
             target_pkgs = {}  # {target_package_name: target_pkg}
             for path in search_paths:
                 self._create_target_pkg(path, target_pkgs)
-            for target_package in target_pkgs.itervalues():
+            for target_package in target_pkgs.values():
                 if debug:
-                    print >>sys.stderr, "target_package:", target_package
+                    # todo(rch): log.debug
+                    print("target_package:", target_package)
                 target_package.compile(self)
                 target_package.write()
                 target_package.load(self, **kws)
-        for kb in self.knowledge_bases.itervalues(): kb.init2()
-        for rb in self.rule_bases.itervalues(): rb.init2()
+        for kb in self.knowledge_bases.values(): kb.init2()
+        for rb in self.rule_bases.values(): rb.init2()
 
     def _create_target_pkg(self, path, target_pkgs):
         # Does target_pkg.add_source_package.
 
-        if debug: print >> sys.stderr, "engine._create_target_pkg:", path
+        if debug: print("engine._create_target_pkg:", path) # todo(rch): log.debug
 
         # First, figure out source_package_name, source_package_dir
         #               and target_package_name:
@@ -122,15 +126,14 @@ class engine(object):
             path, target_package_name = path
         if isinstance(path, types.ModuleType):
             path = path.__file__
-        if not isinstance(path, (types.StringTypes, types.NoneType)):
+        if not path or not isinstance(path, (string_types)):
             raise ValueError("illegal path argument: string expected, got " + \
                                str(type(path)))
 
         if debug:
-            print >> sys.stderr, "_create_target_pkg path:", \
-                                 repr(path)
-            print >> sys.stderr, "_create_target_pkg target_package_name:", \
-                                 repr(target_package_name)
+            # todo(rch): log.debug
+            print("_create_target_pkg path:", repr(path))
+            print("_create_target_pkg target_package_name:", repr(target_package_name))
 
         # Handle the case where there are no source files (for a distributed
         # app that wants to hide its knowledge bases):
@@ -157,14 +160,15 @@ class engine(object):
           _pythonify_path(path)
 
         if debug:
-            print >> sys.stderr, "_create_target_pkg path to " \
+            # todo(rch): log.debug
+            print("_create_target_pkg path to " \
                                    "_pythonify_path:", \
-                                 repr(path)
-            print >> sys.stderr, "    path_to_package:", repr(path_to_package)
-            print >> sys.stderr, "    source_package_name:", \
-                                 repr(source_package_name)
-            print >> sys.stderr, "    remainder_path:", repr(remainder_path)
-            print >> sys.stderr, "    zip_file_flag:", zip_file_flag
+                                 repr(path))
+            print("    path_to_package:", repr(path_to_package))
+            print("    source_package_name:", \
+                                 repr(source_package_name))
+            print("    remainder_path:", repr(remainder_path))
+            print("    zip_file_flag:", zip_file_flag)
 
         target_filename = None
 
@@ -173,7 +177,8 @@ class engine(object):
             num_dots = \
                 len(target_package_name) - len(target_package_name.lstrip('.'))
             if debug:
-                print >> sys.stderr, "_create_target_pkg num_dots:", num_dots
+                # todo(rch): log.debug
+                print("_create_target_pkg num_dots:", num_dots)
             if num_dots == 1:
                 base_package = source_package_name
             else:
@@ -191,17 +196,18 @@ class engine(object):
                            'compiled_pyke_files.py')
 
             if debug:
-                print >> sys.stderr, "_create_target_pkg " \
+                # todo(rch): log.debug
+                print("_create_target_pkg " \
                                        "absolute target_package_name:", \
-                                     target_package_name
+                                     target_package_name)
 
         if target_package_name in target_pkgs:
             tp = target_pkgs[target_package_name]
         else:
             target_name = target_package_name + '.compiled_pyke_files'
             if debug:
-                print >> sys.stderr, "_create_target_pkg target_name:", \
-                                     target_name
+                print("_create_target_pkg target_name:", \
+                                     target_name)
             tp = None
             try:
                 # See if compiled_pyke_files already exists.
@@ -210,7 +216,7 @@ class engine(object):
                 pass
             if tp is None:
                 if debug:
-                    print >> sys.stderr, "_create_target_pkg: no target module"
+                    print("_create_target_pkg: no target module")
                 tp = target_pkg.target_pkg(target_name, target_filename)
             tp.reset()
             target_pkgs[target_package_name] = tp
@@ -233,8 +239,8 @@ class engine(object):
     def reset(self):
         r'''Erases all case-specific facts and deactivates all rule bases.
         '''
-        for rb in self.rule_bases.itervalues(): rb.reset()
-        for kb in self.knowledge_bases.itervalues(): kb.reset()
+        for rb in self.rule_bases.values(): rb.reset()
+        for kb in self.knowledge_bases.values(): kb.reset()
 
     def get_kb(self, kb_name, _new_class = None):
         ans = self.knowledge_bases.get(kb_name)
@@ -262,7 +268,7 @@ class engine(object):
     def add_universal_fact(self, kb_name, fact_name, args):
         r'''Universal facts are not deleted by engine.reset.
         '''
-        if isinstance(args, types.StringTypes):
+        if isinstance(args, string_types):
             raise TypeError("engine.add_universal_fact: "
                             "illegal args type, %s" % type(args))
         args = tuple(args)
@@ -272,7 +278,7 @@ class engine(object):
     def add_case_specific_fact(self, kb_name, fact_name, args):
         r'''Case specific facts are deleted by engine.reset.
         '''
-        if isinstance(args, types.StringTypes):
+        if isinstance(args, string_types):
             raise TypeError("engine.add_case_specific_fact: "
                             "illegal args type, %s" % type(args))
         args = tuple(args)
@@ -280,7 +286,7 @@ class engine(object):
                    .add_case_specific_fact(fact_name, args)
 
     def assert_(self, kb_name, entity_name, args):
-        if isinstance(args, types.StringTypes):
+        if isinstance(args, string_types):
             raise TypeError("engine.assert_: "
                             "illegal args type, %s" % type(args))
         args = tuple(args)
@@ -377,7 +383,7 @@ class engine(object):
 
         Deprecated.  Use engine.prove_goal.
         '''
-        if isinstance(fixed_args, types.StringTypes):
+        if isinstance(fixed_args, string_types):
             raise TypeError("engine.prove_n: fixed_args must not be a string, "
                             "did you forget a , (%(arg)s) => (%(arg)s,)?" %
                             {'arg': repr(fixed_args)})
@@ -408,7 +414,7 @@ class engine(object):
             # All we need is the first one!
             with self.prove_n(kb_name, entity_name, fixed_args, num_returns) \
               as it:
-                return iter(it).next()
+                return next(iter(it))
         except StopIteration:
             raise CanNotProve("Can not prove %s.%s%s" %
                                (kb_name, entity_name,
@@ -417,7 +423,7 @@ class engine(object):
 
     def print_stats(self, f = sys.stdout):
         for kb \
-         in sorted(self.knowledge_bases.itervalues(), key=lambda kb: kb.name):
+         in sorted(self.knowledge_bases.values(), key=lambda kb: kb.name):
             kb.print_stats(f)
 
     def trace(self, rb_name, rule_name):
@@ -430,10 +436,10 @@ Compiled_suffix = None
 
 def _get_target_pkg(target_name):
     global Compiled_suffix
-    if debug: print >> sys.stderr, "_get_target_pkg", target_name
+    if debug: print("_get_target_pkg", target_name) # todo(rch)
     module = target_pkg.import_(target_name)
     path = module.__file__
-    if debug: print >> sys.stderr, "_get_target_pkg __file__ is", path
+    if debug: print("_get_target_pkg __file__ is", path) # todo(rch)
     do_reload = False
     if path.endswith('.py'):
         if Compiled_suffix is None:
@@ -450,35 +456,36 @@ def _get_target_pkg(target_name):
         source_path = path[:-1]
     if not do_reload:
         if debug:
-            print >> sys.stderr, "source path is", source_path
+            # todo(rch)
+            print("source path is", source_path)
             if os.path.exists(source_path):
-                print >> sys.stderr, "source path exists"
-                print >> sys.stderr, "source path mtime", \
-                                     os.path.getmtime(source_path)
+                print("source path exists")
+                print("source path mtime", \
+                                     os.path.getmtime(source_path))
             else:
-                print >> sys.stderr, "source path does not exist"
-            print >> sys.stderr, "compiled path is", path
+                print("source path does not exist")
+            print("compiled path is", path)
             if os.path.exists(path):
-                print >> sys.stderr, "compiled path exists"
-                print >> sys.stderr, "compiled path mtime", \
-                                     os.path.getmtime(path)
+                print("compiled path exists")
+                print("compiled path mtime", \
+                                     os.path.getmtime(path))
             else:
-                print >> sys.stderr, "compiled path does not exist"
+                print("compiled path does not exist")
         if not os.path.exists(path) or \
               os.path.exists(source_path) and \
               os.path.getmtime(source_path) > os.path.getmtime(path):
             do_reload = True
     if do_reload:
         if debug:
-            print >> sys.stderr, "_get_target_pkg doing reload for", target_name
+            print("_get_target_pkg doing reload for", target_name)
         module = reload(module)
         suffix = module.__file__[-4:]
         if suffix in ('.pyc', '.pyo'):
             Compiled_suffix = suffix
     if getattr(module, 'target_pkg_version', None) != pyke.target_pkg_version:
         if debug:
-            print >> sys.stderr, "_get_target_pkg doing invalid version for", \
-                                 target_name
+            print("_get_target_pkg doing invalid version for", \
+                                 target_name)
         return None
     return getattr(module, 'get_target_pkg')()
 
